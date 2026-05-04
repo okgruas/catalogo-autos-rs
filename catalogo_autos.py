@@ -3,10 +3,9 @@ import pandas as pd
 import os
 
 # Configuración de la página
-st.set_page_config(page_title="Vehículos RS .", page_icon="🚗", layout="wide")
+st.set_page_config(page_title="Vehículos RS", page_icon="🚗", layout="wide")
 
-# --- OCULTAR ICONOS DE GITHUB/EDITAR (Solo se ven si eres admin) ---
-# Esto oculta el menú de arriba a la derecha que me mostraste en la foto
+# --- OCULTAR ICONOS DE GITHUB/EDITAR ---
 hide_style = """
     <style>
     #MainMenu {visibility: hidden;}
@@ -31,25 +30,23 @@ MARCAS_DISPONIBLES = sorted(list(DATA_MODELOS.keys()))
 st.title("🚗 Vehículos RS")
 
 # --- LÓGICA DE ADMINISTRACIÓN ---
-# Primero ponemos los filtros arriba en la barra lateral
 st.sidebar.header("🔎 Buscar en Inventario")
 f_marca = st.sidebar.multiselect("Filtrar por Marca", options=MARCAS_DISPONIBLES)
 
-for _ in range(10): st.sidebar.write("") # Espacio para mandar el admin abajo
+for _ in range(10): st.sidebar.write("") 
 
 # El "Cuadrito" Secreto (Admin)
 es_admin = False
 if st.sidebar.checkbox(".", help="Configuración Maestro"):
-    # Si activas el cuadro, mostramos los iconos de arriba para que puedas editar
     st.sidebar.markdown("---")
     token = st.sidebar.text_input("Token de Acceso", type="password")
     if token == "RL1994":
         es_admin = True
         st.sidebar.success("Modo Maestro Activo")
     else:
-        st.markdown(hide_style, unsafe_allow_html=True) # Siguen ocultos si la clave está mal
+        st.markdown(hide_style, unsafe_allow_html=True)
 else:
-    st.markdown(hide_style, unsafe_allow_html=True) # Ocultos por defecto
+    st.markdown(hide_style, unsafe_allow_html=True)
 
 # --- PANEL DE CARGA Y BORRADO (Solo para Admin) ---
 if es_admin:
@@ -89,13 +86,11 @@ if es_admin:
                 df_temp = pd.read_csv('autos.csv')
                 if not df_temp.empty:
                     st.write("Selecciona el auto que ya se vendió:")
-                    # Creamos una lista de nombres para identificar qué borrar
                     df_temp['id_borrar'] = df_temp['marca'] + " " + df_temp['modelo'] + " ($" + df_temp['precio'].astype(str) + ")"
                     auto_a_borrar = st.selectbox("Vehículo a eliminar", options=df_temp['id_borrar'].tolist())
                     
                     if st.button("Confirmar Borrado", type="primary"):
                         df_final = df_temp[df_temp['id_borrar'] != auto_a_borrar]
-                        # Quitamos la columna temporal antes de guardar
                         df_final = df_final.drop(columns=['id_borrar'])
                         df_final.to_csv('autos.csv', index=False)
                         st.error("Vehículo eliminado del catálogo.")
@@ -113,9 +108,8 @@ if os.path.exists('autos.csv'):
         if df_ver.empty:
             st.info("No se encontraron vehículos con esos filtros.")
         else:
-            # Grid de 3 columnas
             cols = st.columns(3)
-            for i, row in df_ver.iterrows():
+            for i, (idx, row) in enumerate(df_ver.iterrows()):
                 with cols[i % 3]:
                     if os.path.exists(str(row['foto'])):
                         st.image(row['foto'], use_container_width=True)
@@ -128,6 +122,6 @@ if os.path.exists('autos.csv'):
                     with st.expander("Más información"):
                         st.write(row['descripcion'])
     except Exception as e:
-        st.error("Hubo un problema al leer los datos. Carga un auto nuevo para reiniciar.")
+        st.error(f"Error: {e}")
 else:
     st.info("Iniciando catálogo... Por favor, usa el acceso maestro para cargar el primer vehículo.")
