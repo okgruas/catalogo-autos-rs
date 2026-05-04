@@ -3,7 +3,7 @@ import pandas as pd
 import os
 
 # Configuración de la página
-st.set_page_config(page_title="Vehículos RS", page_icon="🚗", layout="wide")
+st.set_page_config(page_title="Vehículos RS .", page_icon="🚗", layout="wide")
 
 # --- OCULTAR ICONOS DE GITHUB/EDITAR (Solo se ven si eres admin) ---
 # Esto oculta el menú de arriba a la derecha que me mostraste en la foto
