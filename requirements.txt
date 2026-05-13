@@ -1,3 +1,0 @@
-streamlit
-Pillow
-st-gsheets-connection
