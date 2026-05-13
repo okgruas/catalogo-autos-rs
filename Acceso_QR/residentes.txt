@@ -1,4 +1,0 @@
-ALBATROS-001,Capitana Albatros,Lote 10
-JOSEM-002,Jose Miguel,Lote 12
-JULI-003,Julieta,Lote 10
-VISITA-099,Invitado Especial,Lote 00
